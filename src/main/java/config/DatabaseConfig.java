@@ -23,7 +23,7 @@ public class DatabaseConfig {
             properties.load(input);
             Class.forName(properties.getProperty("db.driver"));
         }catch (Exception e){
-            throw new DBConnectionException("Error loading database configuration ");
+            throw new DBConnectionException("Error loading database configuration" , e);
         }
     }
 
@@ -34,7 +34,7 @@ public class DatabaseConfig {
                    properties.getProperty("db.user"),
                    properties.getProperty("db.password"));
        } catch (Exception e) {
-           throw new DBConnectionException("An error occurred while connecting to the database");
+           throw new DBConnectionException("An error occurred while connecting to the database", e);
        }
            return connection;
    }
