@@ -1,9 +1,7 @@
 package repository;
 
-import com.mysql.cj.result.SqlDateValueFactory;
 import config.DatabaseConfig;
 import exception.customException.DatabaseException;
-import exception.customException.NotFoundException;
 import model.Employee;
 import model.Role;
 
