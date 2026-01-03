@@ -1,0 +1,31 @@
+target/
+out/
+build/
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse###
+.classpath
+.project
+.settings/
+.factorypath
+.metadata/
+
+### VS Code ###
+.vscode/
+
+### NetBeans ###
+nbproject/
+nbbuild/
+nbdist/
+
+### Maven Wrapper ###
+!.mvn/wrapper/maven-wrapper.jar
+
+### OS ###
+.DS_Store
+Thumbs.db
