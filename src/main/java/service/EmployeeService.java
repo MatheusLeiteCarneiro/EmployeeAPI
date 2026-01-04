@@ -2,6 +2,7 @@ package service;
 
 import controller.dto.EmployeeDTO;
 import exception.customException.BusinessRuleException;
+import exception.customException.NotFoundException;
 import model.Employee;
 import model.Role;
 import repository.EmployeeDAO;
@@ -9,6 +10,7 @@ import repository.EmployeeDAO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Optional;
 
 public class EmployeeService {
     private final EmployeeDAO dao;
@@ -17,12 +19,22 @@ public class EmployeeService {
         this.dao = dao;
     }
 
+    public EmployeeDTO findById(Long id){
+        Optional<Employee> optionalEmployee = dao.findById(id);
+        if(optionalEmployee.isEmpty()){
+            throw new NotFoundException("The employee ID: " + id + " doesn't exist");
+        }
+        return new EmployeeDTO(optionalEmployee.get());
+    }
+
     public EmployeeDTO add(EmployeeDTO dto){
         Employee employee = dtoToEntity(dto);
         employee = dao.save(employee);
         dto = new EmployeeDTO(employee);
         return dto;
     }
+
+
 
 
     private Employee dtoToEntity(EmployeeDTO dto){
@@ -69,4 +81,13 @@ public class EmployeeService {
         }
     }
 
+    private void validId(Long id){
+        if(id == null){
+            throw new BusinessRuleException("The ID can't be null");
+        }
+        if(id < 0 ){
+            throw new BusinessRuleException("ID number must be grater than 0");
+        }
+
+    }
 }
