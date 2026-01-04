@@ -60,19 +60,21 @@ public class EmployeeDAO {
         return employee;
     }
 
-    public Employee update(Employee employee) {
+    public Optional<Employee> update(Employee employee) {
         String query = "UPDATE employee SET name = ?, salary = ?, role = ?, hiring_date = ? WHERE id = ?;";
         try (Connection con = DatabaseConfig.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
             setEmployeeStatements(preparedStatement, employee);
             preparedStatement.setLong(5, employee.getId());
             int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected == 0) {
-                return null;
+            if (rowsAffected > 0) {
+                return Optional.of(employee);
+            }
+            else{
+                return Optional.empty();
             }
         } catch (SQLException e) {
             throw new DatabaseException("Error on updating the employee", e);
         }
-        return employee;
     }
 
     public boolean delete(Long id) {
