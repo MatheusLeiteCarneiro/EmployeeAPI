@@ -10,7 +10,9 @@ import repository.EmployeeDAO;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EmployeeService {
     private final EmployeeDAO dao;
@@ -27,15 +29,16 @@ public class EmployeeService {
         return new EmployeeDTO(optionalEmployee.get());
     }
 
+    public List<EmployeeDTO> findAll(){
+         return dao.findAll().stream().map(x -> new EmployeeDTO(x)).collect(Collectors.toList());
+    }
+
     public EmployeeDTO add(EmployeeDTO dto){
         Employee employee = dtoToEntity(dto);
         employee = dao.save(employee);
         dto = new EmployeeDTO(employee);
         return dto;
     }
-
-
-
 
     private Employee dtoToEntity(EmployeeDTO dto){
         employeeDataValidation(dto);
