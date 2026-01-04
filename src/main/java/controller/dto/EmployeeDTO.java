@@ -39,7 +39,7 @@ public class EmployeeDTO {
         this.name = name;
         this.salary = salary;
         this.hiringDate = hiringDate;
-        this.role = role;
+        this.role = role.toUpperCase();
     }
 
     public Long getId() {
@@ -79,7 +79,7 @@ public class EmployeeDTO {
     }
 
     public void setRole(String role) {
-        this.role = role;
+        this.role = role.toUpperCase();
     }
 
     @Override
