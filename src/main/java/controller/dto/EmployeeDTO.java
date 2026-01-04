@@ -13,7 +13,7 @@ public class EmployeeDTO {
     private String name;
     private BigDecimal salary;
     private LocalDate hiringDate;
-    private Role role;
+    private String role;
 
     public EmployeeDTO() {
     }
@@ -23,18 +23,18 @@ public class EmployeeDTO {
         this.name = employee.getName();
         this.salary = employee.getSalary();
         this.hiringDate = employee.getHiringDate();
-        this.role = employee.getRole();
+        this.role = employee.getRole().name();
     }
 
 
-    public EmployeeDTO(String name, BigDecimal salary, LocalDate hiringDate, Role role) {
+    public EmployeeDTO(String name, BigDecimal salary, LocalDate hiringDate, String role) {
         this.name = name;
         this.salary = salary;
         this.hiringDate = hiringDate;
         this.role = role;
     }
 
-    public EmployeeDTO(Long id, String name, BigDecimal salary, LocalDate hiringDate, Role role) {
+    public EmployeeDTO(Long id, String name, BigDecimal salary, LocalDate hiringDate, String role) {
         this.id = id;
         this.name = name;
         this.salary = salary;
@@ -74,11 +74,11 @@ public class EmployeeDTO {
         this.hiringDate = hiringDate;
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -92,10 +92,5 @@ public class EmployeeDTO {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    @Override
-    public String toString() {
-        return getId() + " | " + getName() + " | " + String.format("%.2f", getSalary()) + " | " + getRole() + " | Hired At: " + getHiringDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }
