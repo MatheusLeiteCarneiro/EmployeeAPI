@@ -31,7 +31,7 @@ public class EmployeeDTO {
         this.name = name;
         this.salary = salary;
         this.hiringDate = hiringDate;
-        this.role = role;
+        this.role = role.toUpperCase();
     }
 
     public EmployeeDTO(Long id, String name, BigDecimal salary, LocalDate hiringDate, String role) {
