@@ -23,10 +23,7 @@ public class EmployeeService {
 
     public EmployeeDTO findById(Long id){
         Optional<Employee> optionalEmployee = dao.findById(id);
-        if(optionalEmployee.isEmpty()){
-            throw new NotFoundException("The employee ID: " + id + " doesn't exist");
-        }
-        return new EmployeeDTO(optionalEmployee.get());
+        return new EmployeeDTO(verifyOptional(optionalEmployee));
     }
 
     public List<EmployeeDTO> findAll(){
@@ -34,21 +31,40 @@ public class EmployeeService {
     }
 
     public EmployeeDTO add(EmployeeDTO dto){
-        Employee employee = dtoToEntity(dto);
+        Employee employee = new Employee();
+        dtoToEntity(dto, employee);
         employee = dao.save(employee);
         dto = new EmployeeDTO(employee);
         return dto;
     }
 
-    private Employee dtoToEntity(EmployeeDTO dto){
-        employeeDataValidation(dto);
+    public EmployeeDTO update(EmployeeDTO dto){
+        Long id = dto.getId();
+        validId(id);
         Employee employee = new Employee();
+        dtoToEntity(dto, employee);
+        employee.setId(id);
+        Optional<Employee> optionalEmployee = dao.update(employee);
+        return new EmployeeDTO(verifyOptional(optionalEmployee));
+    }
+
+    public void delete(Long id){
+        validId(id);
+        boolean deleted = dao.delete(id);
+        if(!deleted){
+            throw new NotFoundException("The Id " + id + " was not found to delete");
+        }
+    }
+
+    private void dtoToEntity(EmployeeDTO dto, Employee employee){
+        employeeDataValidation(dto);
         employee.setName(dto.getName());
         employee.setSalary(dto.getSalary());
         employee.setHiringDate(dto.getHiringDate());
         employee.setRole(Role.valueOf(dto.getRole()));
-        return employee;
     }
+
+
 
     private void employeeDataValidation(EmployeeDTO dto){
         if(dto.getName() == null){
@@ -64,7 +80,7 @@ public class EmployeeService {
             throw new BusinessRuleException("The name can't be blank");
         }
         if(dto.getSalary().compareTo(BigDecimal.ZERO) <= 0){
-            throw new BusinessRuleException("The salary must be above 0");
+            throw new BusinessRuleException("The salary must be positive");
         }
         if(dto.getHiringDate().isAfter(LocalDate.now())){
             throw new BusinessRuleException("The hiring date can't be after today");
@@ -86,11 +102,18 @@ public class EmployeeService {
 
     private void validId(Long id){
         if(id == null){
-            throw new BusinessRuleException("The ID can't be null");
+            throw new BusinessRuleException("The ID cannot be null");
         }
         if(id < 0 ){
             throw new BusinessRuleException("ID number must be grater than 0");
         }
 
+    }
+
+    private Employee verifyOptional(Optional<Employee> optional){
+        if(optional.isEmpty()){
+            throw new NotFoundException("The employee does not exist");
+        }
+        return optional.get();
     }
 }
