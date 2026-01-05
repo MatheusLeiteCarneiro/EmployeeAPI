@@ -12,6 +12,9 @@ import java.util.Optional;
 
 public class EmployeeDAO {
 
+    public EmployeeDAO() {
+    }
+
     public Optional<Employee> findById(Long id) {
         Employee employee = null;
         String query = "SELECT * FROM employee WHERE id = ?;";
