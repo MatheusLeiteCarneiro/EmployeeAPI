@@ -26,8 +26,10 @@ public class EmployeeService {
         return new EmployeeDTO(verifyOptional(optionalEmployee));
     }
 
-    public List<EmployeeDTO> findAll(){
-         return dao.findAll().stream().map(x -> new EmployeeDTO(x)).collect(Collectors.toList());
+    public List<EmployeeDTO> findAll(int page, int size){
+        int limit = size;
+        int offset = (page - 1) * size;
+         return dao.findAll(limit, offset).stream().map(x -> new EmployeeDTO(x)).collect(Collectors.toList());
     }
 
     public EmployeeDTO add(EmployeeDTO dto){

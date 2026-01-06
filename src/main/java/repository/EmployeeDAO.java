@@ -31,15 +31,17 @@ public class EmployeeDAO {
         return Optional.ofNullable(employee);
     }
 
-    public List<Employee> findAll() {
+    public List<Employee> findAll(int limit, int offset) {
         List<Employee> employeeList = new ArrayList<>();
-        String query = "SELECT * FROM employee;";
+        String query = "SELECT * FROM employee LIMIT ? OFFSET ?;";
         try (Connection con = DatabaseConfig.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(query);
-             ResultSet rs = preparedStatement.executeQuery();) {
-
-            while (rs.next()) {
-                employeeList.add(setDatabaseAttributesToEmployee(rs));
+             PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setInt(1, limit);
+            preparedStatement.setInt(2, offset);
+            try (ResultSet rs = preparedStatement.executeQuery()){
+                while (rs.next()) {
+                    employeeList.add(setDatabaseAttributesToEmployee(rs));
+                }
             }
         } catch (Exception e) {
             throw new DatabaseException("Error on Getting the employee list", e);
