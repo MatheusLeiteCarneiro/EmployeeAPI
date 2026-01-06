@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import controller.dto.EmployeeDTO;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +29,7 @@ public class EmployeeController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String json;
         Long id = getIdFromPath(req);
         if (id == null) {
@@ -56,7 +55,7 @@ public class EmployeeController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         EmployeeDTO dtoReceived = objectMapper.readValue(req.getReader(), EmployeeDTO.class);
         EmployeeDTO dtoSaved = service.add(dtoReceived);
         String json = objectMapper.writeValueAsString(dtoSaved);
@@ -65,7 +64,7 @@ public class EmployeeController extends HttpServlet {
     }
 
     @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         Long id = getIdFromPath(req);
         EmployeeDTO receivedDto = objectMapper.readValue(req.getReader(), EmployeeDTO.class);
         receivedDto.setId(id);
@@ -76,7 +75,7 @@ public class EmployeeController extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp){
         Long id = getIdFromPath(req);
         service.delete(id);
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
