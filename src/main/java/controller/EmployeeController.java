@@ -31,36 +31,28 @@ public class EmployeeController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String json = "";
-        String pathInfo = req.getPathInfo();
-
-        try{
-            if(pathInfo == null || pathInfo.equals("/")){
-                List<EmployeeDTO> employeePage;
-                String pageParam = req.getParameter("page");
-                String sizeParam = req.getParameter("size");
-                int page = DEFAULT_PAGE;
-                int size = DEFAULT_SIZE;
-                if(pageParam != null && !pageParam.isEmpty()){
-                    page = Integer.parseInt(pageParam);
-                }
-                if(sizeParam != null && !sizeParam.isEmpty()){
-                    size = Integer.parseInt(sizeParam);
-                }
-                employeePage = service.findAll(page, size);
-                json = objectMapper.writeValueAsString(employeePage);
+        String json;
+        Long id = getIdFromPath(req);
+        if (id == null) {
+            List<EmployeeDTO> employeePage;
+            String pageParam = req.getParameter("page");
+            String sizeParam = req.getParameter("size");
+            int page = DEFAULT_PAGE;
+            int size = DEFAULT_SIZE;
+            if (pageParam != null && !pageParam.isEmpty()) {
+                page = Integer.parseInt(pageParam);
             }
-            else{
-                Long id = Long.parseLong(pathInfo.substring(1));
-                EmployeeDTO employee = service.findById(id);
-                json = objectMapper.writeValueAsString(employee);
+            if (sizeParam != null && !sizeParam.isEmpty()) {
+                size = Integer.parseInt(sizeParam);
             }
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        }catch (NumberFormatException e){
-            throw e;
+            employeePage = service.findAll(page, size);
+            json = objectMapper.writeValueAsString(employeePage);
+        } else {
+            EmployeeDTO employee = service.findById(id);
+            json = objectMapper.writeValueAsString(employee);
         }
-
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
     }
 
     @Override
@@ -74,25 +66,29 @@ public class EmployeeController extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String pathInfo = req.getPathInfo();
-        Long id = null;
-        try {
-            if(pathInfo != null && !pathInfo.equals("/")){
-                id = Long.parseLong(pathInfo.substring(1));
-            }
-            EmployeeDTO receivedDto = objectMapper.readValue(req.getReader(), EmployeeDTO.class);
-            receivedDto.setId(id);
-            EmployeeDTO updatedDto = service.update(receivedDto);
-            String json = objectMapper.writeValueAsString(updatedDto);
-            resp.setStatus(HttpServletResponse.SC_OK);
-            resp.getWriter().write(json);
-        }catch (NumberFormatException e){
-            throw e;
-        }
-
+        Long id = getIdFromPath(req);
+        EmployeeDTO receivedDto = objectMapper.readValue(req.getReader(), EmployeeDTO.class);
+        receivedDto.setId(id);
+        EmployeeDTO updatedDto = service.update(receivedDto);
+        String json = objectMapper.writeValueAsString(updatedDto);
+        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.getWriter().write(json);
     }
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Long id = getIdFromPath(req);
+        service.delete(id);
+        resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+
+    private Long getIdFromPath(HttpServletRequest req) {
+        String pathInfo = req.getPathInfo();
+        Long id = null;
+        if (pathInfo != null && !pathInfo.equals("/")) {
+            id = Long.parseLong(pathInfo.substring(1));
+        }
+        return id;
+
     }
 }
