@@ -74,6 +74,22 @@ public class EmployeeController extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String pathInfo = req.getPathInfo();
+        Long id = null;
+        try {
+            if(pathInfo != null && !pathInfo.equals("/")){
+                id = Long.parseLong(pathInfo.substring(1));
+            }
+            EmployeeDTO receivedDto = objectMapper.readValue(req.getReader(), EmployeeDTO.class);
+            receivedDto.setId(id);
+            EmployeeDTO updatedDto = service.update(receivedDto);
+            String json = objectMapper.writeValueAsString(updatedDto);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
+        }catch (NumberFormatException e){
+            throw e;
+        }
+
     }
 
     @Override
