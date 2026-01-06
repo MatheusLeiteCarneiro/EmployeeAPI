@@ -38,6 +38,7 @@ public class EmployeeDAO {
              PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setInt(1, limit);
             preparedStatement.setInt(2, offset);
+
             try (ResultSet rs = preparedStatement.executeQuery()){
                 while (rs.next()) {
                     employeeList.add(setDatabaseAttributesToEmployee(rs));
@@ -72,7 +73,7 @@ public class EmployeeDAO {
             preparedStatement.setLong(5, employee.getId());
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
-                return Optional.of(employee);
+                return findById(con, employee.getId());
             }
             else{
                 return Optional.empty();
@@ -113,5 +114,21 @@ public class EmployeeDAO {
         java.sql.Date dbDate = resultSet.getDate("hiring_date");
         employee.setHiringDate(dbDate.toLocalDate());
         return employee;
+    }
+
+    private Optional<Employee> findById(Connection con, Long id) {
+        Employee employee = null;
+        String query = "SELECT * FROM employee WHERE id = ?;";
+        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
+            preparedStatement.setLong(1, id);
+            try (ResultSet rs = preparedStatement.executeQuery()) {
+                if (rs.next()) {
+                    employee = setDatabaseAttributesToEmployee(rs);
+                }
+            }
+        } catch (Exception e) {
+            throw new DatabaseException("Error Selecting the employee", e);
+        }
+        return Optional.ofNullable(employee);
     }
 }
