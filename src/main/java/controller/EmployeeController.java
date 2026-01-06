@@ -65,6 +65,11 @@ public class EmployeeController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        EmployeeDTO dtoReceived = objectMapper.readValue(req.getReader(), EmployeeDTO.class);
+        EmployeeDTO dtoSaved = service.add(dtoReceived);
+        String json = objectMapper.writeValueAsString(dtoSaved);
+        resp.setStatus(HttpServletResponse.SC_CREATED);
+        resp.getWriter().write(json);
     }
 
     @Override
