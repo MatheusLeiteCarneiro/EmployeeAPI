@@ -3,6 +3,7 @@ package filter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import config.ObjectMapperConfig;
 import dto.ErrorDTO;
 import exception.*;
 import jakarta.servlet.*;
@@ -14,9 +15,7 @@ import java.io.IOException;
 @WebFilter("/*")
 public class ExceptionHandlerFilter implements Filter {
 
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    private final ObjectMapper objectMapper = ObjectMapperConfig.getMapper();
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

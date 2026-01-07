@@ -3,6 +3,7 @@ package controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import config.ObjectMapperConfig;
 import dto.EmployeeDTO;
 import exception.InvalidParamException;
 import jakarta.servlet.annotation.WebServlet;
@@ -24,9 +25,7 @@ public class EmployeeController extends HttpServlet {
 
     public EmployeeController() {
         this.service = new EmployeeService(new EmployeeDAO());
-        this.objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        this.objectMapper = ObjectMapperConfig.getMapper();
     }
 
     @Override
