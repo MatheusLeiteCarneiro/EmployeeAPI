@@ -1,42 +1,57 @@
 package config;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import exception.DBConnectionException;
 
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Properties;
 
 public class DatabaseConfig {
 
-    private static final Properties properties = new Properties();
+    private static HikariDataSource dataSource;
 
     static {
-        loadProperties();
-    }
-
-    private static void loadProperties(){
-        try(InputStream input = DatabaseConfig.class.getClassLoader().getResourceAsStream("application.properties")){
-            if(input == null){
-                throw new DBConnectionException("Properties not found");
+        try{
+            Properties properties = new Properties();
+            try (InputStream input = DatabaseConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
+                properties.load(input);
             }
-            properties.load(input);
-            Class.forName(properties.getProperty("db.driver"));
+
+            HikariConfig config = new HikariConfig();
+            config.setJdbcUrl(properties.getProperty("db.url"));
+            config.setUsername(properties.getProperty("db.user"));
+            config.setPassword(properties.getProperty("db.password"));
+            config.setDriverClassName(properties.getProperty("db.driver"));
+            config.setMaximumPoolSize(10);
+            config.setMinimumIdle(5);
+            config.setConnectionTimeout(30000);
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+            dataSource = new HikariDataSource(config);
+
         }catch (Exception e){
-            throw new DBConnectionException("Error loading database configuration" , e);
+            throw new DBConnectionException("Error loading database configuration");
         }
     }
 
+
    public static Connection getConnection(){
-       Connection connection = null;
        try {
-           connection = DriverManager.getConnection(properties.getProperty("db.url"),
-                   properties.getProperty("db.user"),
-                   properties.getProperty("db.password"));
-       } catch (Exception e) {
-           throw new DBConnectionException("An error occurred while connecting to the database", e);
+           return dataSource.getConnection();
+       } catch (SQLException e) {
+           throw new DBConnectionException("Error connecting to the database");
        }
-           return connection;
+   }
+
+   public static void closePool(){
+        if(dataSource !=null && !dataSource.isClosed()){
+            dataSource.close();
+        }
    }
 
 }
