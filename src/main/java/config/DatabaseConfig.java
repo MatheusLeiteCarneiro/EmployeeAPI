@@ -1,6 +1,6 @@
 package config;
 
-import exception.customException.DBConnectionException;
+import exception.DBConnectionException;
 
 import java.io.InputStream;
 import java.sql.Connection;

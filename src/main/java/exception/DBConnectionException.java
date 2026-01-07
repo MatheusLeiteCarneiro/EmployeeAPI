@@ -1,4 +1,4 @@
-package exception.customException;
+package exception;
 
 public class DBConnectionException extends RuntimeException {
     public DBConnectionException(String message) {

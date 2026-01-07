@@ -1,7 +1,7 @@
 package repository;
 
 import config.DatabaseConfig;
-import exception.customException.DatabaseException;
+import exception.DatabaseException;
 import model.Employee;
 import model.Role;
 

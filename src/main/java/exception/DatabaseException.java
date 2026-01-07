@@ -1,4 +1,4 @@
-package exception.customException;
+package exception;
 
 public class DatabaseException extends RuntimeException {
     public DatabaseException(String message) {

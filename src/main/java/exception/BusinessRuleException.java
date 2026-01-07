@@ -1,4 +1,4 @@
-package exception.customException;
+package exception;
 
 public class BusinessRuleException extends RuntimeException {
     public BusinessRuleException(String message) {
