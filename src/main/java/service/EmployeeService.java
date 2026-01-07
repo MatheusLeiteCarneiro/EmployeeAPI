@@ -27,6 +27,12 @@ public class EmployeeService {
     }
 
     public List<EmployeeDTO> findAll(int page, int size){
+        if(size < 0){
+            throw new BusinessRuleException("The 'size' must be greater than 0");
+        }
+        if(page < 0){
+            throw new BusinessRuleException("The 'page' must be greater than 0");
+        }
         int limit = size;
         int offset = (page - 1) * size;
          return dao.findAll(limit, offset).stream().map(x -> new EmployeeDTO(x)).collect(Collectors.toList());

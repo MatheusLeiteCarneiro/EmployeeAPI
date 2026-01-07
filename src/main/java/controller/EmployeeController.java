@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dto.EmployeeDTO;
+import exception.InvalidParamException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,14 +37,8 @@ public class EmployeeController extends HttpServlet {
             List<EmployeeDTO> employeePage;
             String pageParam = req.getParameter("page");
             String sizeParam = req.getParameter("size");
-            int page = DEFAULT_PAGE;
-            int size = DEFAULT_SIZE;
-            if (pageParam != null && !pageParam.isEmpty()) {
-                page = Integer.parseInt(pageParam);
-            }
-            if (sizeParam != null && !sizeParam.isEmpty()) {
-                size = Integer.parseInt(sizeParam);
-            }
+            int page = parseIntegerParam("page", pageParam, DEFAULT_PAGE);
+            int size = parseIntegerParam("size", sizeParam, DEFAULT_SIZE);
             employeePage = service.findAll(page, size);
             json = objectMapper.writeValueAsString(employeePage);
         } else {
@@ -84,10 +79,28 @@ public class EmployeeController extends HttpServlet {
     private Long getIdFromPath(HttpServletRequest req) {
         String pathInfo = req.getPathInfo();
         Long id = null;
-        if (pathInfo != null && !pathInfo.equals("/")) {
-            id = Long.parseLong(pathInfo.substring(1));
+        try{
+            if (pathInfo != null && !pathInfo.equals("/")) {
+                id = Long.parseLong(pathInfo.substring(1));
+            }
+        }
+        catch (NumberFormatException e){
+            throw new InvalidParamException("The 'id' parameter must be a numeric value.");
         }
         return id;
 
+    }
+
+    private int parseIntegerParam(String paramName, String paramValue, int defaultValue){
+        if (paramValue == null || paramValue.isEmpty()) {
+            return defaultValue;
+        }
+
+        try{
+            return Integer.parseInt(paramValue);
+        }
+        catch (NumberFormatException e){
+            throw new InvalidParamException("The '" + paramName + "' field must be a numeric value");
+        }
     }
 }

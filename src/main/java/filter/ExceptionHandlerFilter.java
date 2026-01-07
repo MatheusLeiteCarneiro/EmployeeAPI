@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dto.ErrorDTO;
-import exception.BusinessRuleException;
-import exception.DBConnectionException;
-import exception.DatabaseException;
-import exception.NotFoundException;
+import exception.*;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,7 +32,7 @@ public class ExceptionHandlerFilter implements Filter {
     private void handleException(HttpServletResponse response, Exception e) throws IOException {
         String message = "Internal Server Error";
         int status = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-        if (e instanceof NumberFormatException || e instanceof BusinessRuleException) {
+        if (e instanceof InvalidParamException || e instanceof BusinessRuleException) {
             status = HttpServletResponse.SC_BAD_REQUEST;
             message = e.getMessage();
         }
