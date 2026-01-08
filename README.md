@@ -90,20 +90,20 @@ USE EmployeeAPI;
 
 -- 2. Create Table
 CREATE TABLE IF NOT EXISTS employee (
-                                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                        name VARCHAR(255) NOT NULL,
-    salary DECIMAL(19, 2) NOT NULL,
-    role VARCHAR(50) NOT NULL,
-    hiring_date DATE NOT NULL
-    );
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+ name VARCHAR(255) NOT NULL,
+salary DECIMAL(19, 2) NOT NULL,
+role VARCHAR(50) NOT NULL,
+ hiring_date DATE NOT NULL
+);
 
 --3. (Optional) Insert initial employees
 INSERT INTO employee (name, salary, role, hiring_date) VALUES
-                                                           ('Carlos Eduardo Silva', 12500.00, 'SENIOR', '2021-03-15'),
-                                                           ('Fernanda Oliveira', 7800.00, 'MID_LEVEL', '2022-08-20'),
-                                                           ('Lucas Pereira', 4200.50, 'JUNIOR', '2024-01-10'),
-                                                           ('Amanda Costa', 1800.00, 'INTERN', '2024-11-01'),
-                                                           ('Roberto Mendes', 8500.00, 'MID_LEVEL', '2023-05-12');
+('Carlos Eduardo Silva', 12500.00, 'SENIOR', '2021-03-15'),
+('Fernanda Oliveira', 7800.00, 'MID_LEVEL', '2022-08-20'),
+('Lucas Pereira', 4200.50, 'JUNIOR', '2024-01-10'),
+('Amanda Costa', 1800.00, 'INTERN', '2024-11-01'),
+('Roberto Mendes', 8500.00, 'MID_LEVEL', '2023-05-12');
 ```
 > **Note:** The roles available in the project are: `INTERN`, `JUNIOR`, `MID_LEVEL`, `SENIOR`.
 ---
