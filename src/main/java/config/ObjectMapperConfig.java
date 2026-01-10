@@ -14,9 +14,10 @@ public class ObjectMapperConfig {
         INSTANCE.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    private ObjectMapperConfig(){}
+    private ObjectMapperConfig() {
+    }
 
-    public static ObjectMapper getMapper(){
+    public static ObjectMapper getMapper() {
         return INSTANCE;
     }
 }

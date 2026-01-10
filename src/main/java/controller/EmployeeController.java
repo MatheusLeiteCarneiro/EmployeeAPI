@@ -1,8 +1,6 @@
 package controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import config.ObjectMapperConfig;
 import dto.EmployeeDTO;
 import exception.InvalidParamException;
@@ -69,7 +67,7 @@ public class EmployeeController extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp){
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) {
         Long id = getIdFromPath(req);
         service.delete(id);
         resp.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -78,27 +76,25 @@ public class EmployeeController extends HttpServlet {
     private Long getIdFromPath(HttpServletRequest req) {
         String pathInfo = req.getPathInfo();
         Long id = null;
-        try{
+        try {
             if (pathInfo != null && !pathInfo.equals("/")) {
                 id = Long.parseLong(pathInfo.substring(1));
             }
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new InvalidParamException("The 'id' parameter must be a numeric value.");
         }
         return id;
 
     }
 
-    private int parseIntegerParam(String paramName, String paramValue, int defaultValue){
+    private int parseIntegerParam(String paramName, String paramValue, int defaultValue) {
         if (paramValue == null || paramValue.isEmpty()) {
             return defaultValue;
         }
 
-        try{
+        try {
             return Integer.parseInt(paramValue);
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new InvalidParamException("The '" + paramName + "' field must be a numeric value");
         }
     }

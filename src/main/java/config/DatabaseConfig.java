@@ -6,7 +6,6 @@ import exception.DBConnectionException;
 
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -14,8 +13,11 @@ public class DatabaseConfig {
 
     private static HikariDataSource dataSource;
 
+    private DatabaseConfig() {
+    }
+
     static {
-        try{
+        try {
             Properties properties = new Properties();
             try (InputStream input = DatabaseConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
                 properties.load(input);
@@ -34,24 +36,24 @@ public class DatabaseConfig {
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
             dataSource = new HikariDataSource(config);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DBConnectionException("Error loading database configuration");
         }
     }
 
 
-   public static Connection getConnection(){
-       try {
-           return dataSource.getConnection();
-       } catch (SQLException e) {
-           throw new DBConnectionException("Error connecting to the database");
-       }
-   }
+    public static Connection getConnection() {
+        try {
+            return dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new DBConnectionException("Error connecting to the database");
+        }
+    }
 
-   public static void closePool(){
-        if(dataSource !=null && !dataSource.isClosed()){
+    public static void closePool() {
+        if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();
         }
-   }
+    }
 
 }

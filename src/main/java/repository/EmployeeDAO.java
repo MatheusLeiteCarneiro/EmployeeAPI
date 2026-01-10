@@ -34,12 +34,11 @@ public class EmployeeDAO {
     public List<Employee> findAll(int limit, int offset) {
         List<Employee> employeeList = new ArrayList<>();
         String query = "SELECT * FROM employee LIMIT ? OFFSET ?;";
-        try (Connection con = DatabaseConfig.getConnection();
-             PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (Connection con = DatabaseConfig.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setInt(1, limit);
             preparedStatement.setInt(2, offset);
 
-            try (ResultSet rs = preparedStatement.executeQuery()){
+            try (ResultSet rs = preparedStatement.executeQuery()) {
                 while (rs.next()) {
                     employeeList.add(setDatabaseAttributesToEmployee(rs));
                 }
@@ -74,8 +73,7 @@ public class EmployeeDAO {
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 return findById(con, employee.getId());
-            }
-            else{
+            } else {
                 return Optional.empty();
             }
         } catch (SQLException e) {

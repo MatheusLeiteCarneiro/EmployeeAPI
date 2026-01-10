@@ -14,6 +14,6 @@ public class ContentTypeFilter implements Filter {
         servletResponse.setContentType("application/json");
         servletResponse.setCharacterEncoding("UTF-8");
 
-        filterChain.doFilter(servletRequest,servletResponse);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }
