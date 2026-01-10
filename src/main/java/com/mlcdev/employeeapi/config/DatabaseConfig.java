@@ -1,8 +1,8 @@
-package config;
+package com.mlcdev.employeeapi.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import exception.DBConnectionException;
+import com.mlcdev.employeeapi.exception.DBConnectionException;
 
 import java.io.InputStream;
 import java.sql.Connection;

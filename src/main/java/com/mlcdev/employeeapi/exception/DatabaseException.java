@@ -1,4 +1,4 @@
-package exception;
+package com.mlcdev.employeeapi.exception;
 
 public class DatabaseException extends RuntimeException {
     public DatabaseException(String message) {

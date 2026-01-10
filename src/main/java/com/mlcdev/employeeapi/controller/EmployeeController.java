@@ -1,15 +1,15 @@
-package controller;
+package com.mlcdev.employeeapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import config.ObjectMapperConfig;
-import dto.EmployeeDTO;
-import exception.InvalidParamException;
+import com.mlcdev.employeeapi.config.ObjectMapperConfig;
+import com.mlcdev.employeeapi.dto.EmployeeDTO;
+import com.mlcdev.employeeapi.exception.InvalidParamException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import repository.EmployeeDAO;
-import service.EmployeeService;
+import com.mlcdev.employeeapi.repository.EmployeeDAO;
+import com.mlcdev.employeeapi.service.EmployeeService;
 
 import java.io.IOException;
 import java.util.List;

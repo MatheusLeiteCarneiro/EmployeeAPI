@@ -1,11 +1,11 @@
-package service;
+package com.mlcdev.employeeapi.service;
 
-import dto.EmployeeDTO;
-import exception.BusinessRuleException;
-import exception.NotFoundException;
-import model.Employee;
-import model.Role;
-import repository.EmployeeDAO;
+import com.mlcdev.employeeapi.dto.EmployeeDTO;
+import com.mlcdev.employeeapi.exception.BusinessRuleException;
+import com.mlcdev.employeeapi.exception.NotFoundException;
+import com.mlcdev.employeeapi.model.Employee;
+import com.mlcdev.employeeapi.model.Role;
+import com.mlcdev.employeeapi.repository.EmployeeDAO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

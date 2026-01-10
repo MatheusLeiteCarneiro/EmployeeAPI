@@ -1,4 +1,4 @@
-package exception;
+package com.mlcdev.employeeapi.exception;
 
 public class DBConnectionException extends RuntimeException {
     public DBConnectionException(String message) {

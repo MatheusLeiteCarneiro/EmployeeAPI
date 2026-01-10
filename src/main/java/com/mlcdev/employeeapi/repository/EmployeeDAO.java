@@ -1,9 +1,9 @@
-package repository;
+package com.mlcdev.employeeapi.repository;
 
-import config.DatabaseConfig;
-import exception.DatabaseException;
-import model.Employee;
-import model.Role;
+import com.mlcdev.employeeapi.config.DatabaseConfig;
+import com.mlcdev.employeeapi.exception.DatabaseException;
+import com.mlcdev.employeeapi.model.Employee;
+import com.mlcdev.employeeapi.model.Role;
 
 import java.sql.*;
 import java.util.ArrayList;
