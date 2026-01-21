@@ -26,6 +26,12 @@ public class EmployeeController extends HttpServlet {
         this.objectMapper = ObjectMapperConfig.getMapper();
     }
 
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
+        this.objectMapper = ObjectMapperConfig.getMapper();
+
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String json;
@@ -98,4 +104,14 @@ public class EmployeeController extends HttpServlet {
             throw new InvalidParamException("The '" + paramName + "' field must be a numeric value");
         }
     }
+
+    public static int getDefaultPage(){
+        return DEFAULT_PAGE;
+    }
+
+    public  static int getDefaultSize(){
+        return DEFAULT_SIZE;
+    }
+
+
 }
