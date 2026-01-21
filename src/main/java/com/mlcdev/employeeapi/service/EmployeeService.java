@@ -27,10 +27,10 @@ public class EmployeeService {
     }
 
     public List<EmployeeDTO> findAll(int page, int size) {
-        if (size < 0) {
+        if (size <= 0) {
             throw new BusinessRuleException("The 'size' must be greater than 0");
         }
-        if (page < 0) {
+        if (page <= 0) {
             throw new BusinessRuleException("The 'page' must be greater than 0");
         }
         int limit = size;
@@ -97,6 +97,9 @@ public class EmployeeService {
 
     private void validateRole(String dtoRole) {
         if (dtoRole == null) {
+            throw new BusinessRuleException("You must specify the employee role");
+        }
+        if (dtoRole.isBlank()) {
             throw new BusinessRuleException("You must specify the employee role");
         }
 
