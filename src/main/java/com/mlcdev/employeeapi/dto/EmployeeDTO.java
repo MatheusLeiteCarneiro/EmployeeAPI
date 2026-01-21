@@ -21,7 +21,12 @@ public class EmployeeDTO {
         this.name = employee.getName();
         this.salary = employee.getSalary();
         this.hiringDate = employee.getHiringDate();
-        this.role = employee.getRole().name();
+        if(employee.getRole() != null){
+            this.role = employee.getRole().name().toUpperCase();
+        }
+        else {
+            this.role = null;
+        }
     }
 
 
@@ -29,7 +34,12 @@ public class EmployeeDTO {
         this.name = name;
         this.salary = salary;
         this.hiringDate = hiringDate;
+        if(role != null){
         this.role = role.toUpperCase();
+        }
+        else {
+            this.role = null;
+        }
     }
 
     public EmployeeDTO(Long id, String name, BigDecimal salary, LocalDate hiringDate, String role) {
@@ -37,7 +47,12 @@ public class EmployeeDTO {
         this.name = name;
         this.salary = salary;
         this.hiringDate = hiringDate;
-        this.role = role.toUpperCase();
+        if(role != null){
+            this.role = role.toUpperCase();
+        }
+        else {
+            this.role = null;
+        }
     }
 
     public Long getId() {
