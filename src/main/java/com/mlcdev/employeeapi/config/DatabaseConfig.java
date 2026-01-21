@@ -1,8 +1,9 @@
 package com.mlcdev.employeeapi.config;
 
+import com.mlcdev.employeeapi.exception.DBConnectionException;
+import com.mlcdev.employeeapi.exception.DatabaseException;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import com.mlcdev.employeeapi.exception.DBConnectionException;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -19,9 +20,18 @@ public class DatabaseConfig {
     static {
         try {
             Properties properties = new Properties();
-            try (InputStream input = DatabaseConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
-                properties.load(input);
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("application.properties");
+
+            if (input == null) {
+                input = DatabaseConfig.class.getClassLoader().getResourceAsStream("application.properties");
             }
+
+            if (input == null) {
+                throw new DatabaseException("'application.properties' file not found in the classpath.");
+            }
+
+            properties.load(input);
+
 
             HikariConfig config = new HikariConfig();
             config.setJdbcUrl(properties.getProperty("db.url"));
@@ -34,13 +44,14 @@ public class DatabaseConfig {
             config.addDataSourceProperty("cachePrepStmts", "true");
             config.addDataSourceProperty("prepStmtCacheSize", "250");
             config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
             dataSource = new HikariDataSource(config);
 
         } catch (Exception e) {
-            throw new DBConnectionException("Error loading database configuration");
+            e.printStackTrace();
+            throw new DBConnectionException("Error loading database configuration: " + e.getMessage());
         }
     }
-
 
     public static Connection getConnection() {
         try {
@@ -55,5 +66,4 @@ public class DatabaseConfig {
             dataSource.close();
         }
     }
-
 }
