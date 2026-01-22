@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.mlcdev.employeeapi.repository.EmployeeDAO;
 import com.mlcdev.employeeapi.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -20,6 +22,7 @@ public class EmployeeController extends HttpServlet {
     private static final int DEFAULT_SIZE = 10;
     private final EmployeeService service;
     private final ObjectMapper objectMapper;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
     public EmployeeController() {
         this.service = new EmployeeService(new EmployeeDAO());

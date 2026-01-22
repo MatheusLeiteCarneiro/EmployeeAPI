@@ -4,6 +4,8 @@ import com.mlcdev.employeeapi.config.DatabaseConfig;
 import com.mlcdev.employeeapi.exception.DatabaseException;
 import com.mlcdev.employeeapi.model.Employee;
 import com.mlcdev.employeeapi.model.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 public class EmployeeDAO {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeDAO.class);
     public EmployeeDAO() {
     }
 
@@ -23,6 +26,7 @@ public class EmployeeDAO {
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
                     employee = setDatabaseAttributesToEmployee(rs);
+                    LOGGER.debug("SELECT executed with ID: {}.",employee.getId());
                 }
             }
         } catch (Exception e) {
@@ -42,6 +46,7 @@ public class EmployeeDAO {
                 while (rs.next()) {
                     employeeList.add(setDatabaseAttributesToEmployee(rs));
                 }
+                LOGGER.debug("SELECT all executed.");
             }
         } catch (Exception e) {
             throw new DatabaseException("Error on Getting the employee list", e);
@@ -57,6 +62,7 @@ public class EmployeeDAO {
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
                 if (rs.next()) {
                     employee.setId(rs.getLong(1));
+                    LOGGER.debug("INSERT successfully saved with primary generated key: {}.",employee.getId());
                 }
             }
         } catch (Exception e) {
@@ -72,6 +78,7 @@ public class EmployeeDAO {
             preparedStatement.setLong(5, employee.getId());
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
+                LOGGER.debug("UPDATE successfully executed.");
                 return findById(con, employee.getId());
             } else {
                 return Optional.empty();
@@ -92,6 +99,7 @@ public class EmployeeDAO {
         } catch (SQLException e) {
             throw new DatabaseException("Error on deleting the employee", e);
         }
+        LOGGER.debug("DELETE successfully executed.");
         return true;
     }
 

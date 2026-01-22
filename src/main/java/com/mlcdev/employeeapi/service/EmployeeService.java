@@ -6,6 +6,8 @@ import com.mlcdev.employeeapi.exception.NotFoundException;
 import com.mlcdev.employeeapi.model.Employee;
 import com.mlcdev.employeeapi.model.Role;
 import com.mlcdev.employeeapi.repository.EmployeeDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 
 public class EmployeeService {
     private final EmployeeDAO dao;
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
     public EmployeeService(EmployeeDAO dao) {
         this.dao = dao;
@@ -23,7 +26,9 @@ public class EmployeeService {
 
     public EmployeeDTO findById(Long id) {
         Optional<Employee> optionalEmployee = dao.findById(id);
-        return new EmployeeDTO(verifyOptional(optionalEmployee));
+        Employee employee= verifyOptional(optionalEmployee);
+        LOGGER.debug("Employee with ID: {}, successfully found.", id);
+        return new EmployeeDTO(employee);
     }
 
     public List<EmployeeDTO> findAll(int page, int size) {
@@ -35,7 +40,9 @@ public class EmployeeService {
         }
         int limit = size;
         int offset = (page - 1) * size;
-        return dao.findAll(limit, offset).stream().map(x -> new EmployeeDTO(x)).collect(Collectors.toList());
+        List<EmployeeDTO> dtoList = dao.findAll(limit, offset).stream().map(x -> new EmployeeDTO(x)).collect(Collectors.toList());
+        LOGGER.debug("Got a list with {} DTOs.", dtoList.size());
+        return dtoList;
     }
 
     public EmployeeDTO add(EmployeeDTO dto) {
@@ -43,6 +50,7 @@ public class EmployeeService {
         dtoToEntity(dto, employee);
         employee = dao.save(employee);
         dto = new EmployeeDTO(employee);
+        LOGGER.info("Employee saved with ID: {}.", dto.getId());
         return dto;
     }
 
@@ -52,8 +60,9 @@ public class EmployeeService {
         Employee employee = new Employee();
         dtoToEntity(dto, employee);
         employee.setId(id);
-        Optional<Employee> optionalEmployee = dao.update(employee);
-        return new EmployeeDTO(verifyOptional(optionalEmployee));
+        Employee finalEmployee = verifyOptional(dao.update(employee));
+        LOGGER.info("Employee with ID: {} successfully updated!",finalEmployee.getId());
+        return new EmployeeDTO(finalEmployee);
     }
 
     public void delete(Long id) {
@@ -62,6 +71,7 @@ public class EmployeeService {
         if (!deleted) {
             throw new NotFoundException("The Id " + id + " was not found to delete");
         }
+        LOGGER.info("Employee with ID: {} successfully deleted!", id);
     }
 
     private void dtoToEntity(EmployeeDTO dto, Employee employee) {
@@ -93,6 +103,7 @@ public class EmployeeService {
             throw new BusinessRuleException("The hiring date can't be after today");
         }
         validateRole(dto.getRole());
+        LOGGER.debug("All the information from the DTO are valid.");
     }
 
     private void validateRole(String dtoRole) {
@@ -117,13 +128,13 @@ public class EmployeeService {
         if (id < 0) {
             throw new BusinessRuleException("ID number must be grater than 0");
         }
-
     }
 
     private Employee verifyOptional(Optional<Employee> optional) {
         if (optional.isEmpty()) {
             throw new NotFoundException("The employee does not exist");
         }
+        LOGGER.debug("The Optional contain a Employee");
         return optional.get();
     }
 }

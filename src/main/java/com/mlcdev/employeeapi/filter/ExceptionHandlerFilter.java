@@ -7,6 +7,8 @@ import com.mlcdev.employeeapi.exception.*;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -14,6 +16,7 @@ import java.io.IOException;
 public class ExceptionHandlerFilter implements Filter {
 
     private final ObjectMapper objectMapper = ObjectMapperConfig.getMapper();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerFilter.class);
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -42,6 +45,7 @@ public class ExceptionHandlerFilter implements Filter {
         } else {
             e.printStackTrace();
         }
+        LOGGER.error("{} -> {}", e.getMessage(),status);
         ErrorDTO error = new ErrorDTO(status, message);
         response.setStatus(status);
         response.setContentType("application/json");
