@@ -173,17 +173,6 @@ class EmployeeServiceTest {
         }
 
         @Test
-        void addFutureHiringDateShouldThrowException() {
-            EmployeeDTO dto = new EmployeeDTO(1L, "name", new BigDecimal("1.0"), LocalDate.now().plusDays(1), Role.INTERN.name());
-
-            Assertions.assertThrows(BusinessRuleException.class, () -> {
-                service.add(dto);
-            }, "It shouldn't accept a future hiring date");
-
-            Mockito.verifyNoInteractions(dao);
-        }
-
-        @Test
         void addNullRoleShouldThrowException() {
             EmployeeDTO dto = new EmployeeDTO(1L, "name", new BigDecimal("1.0"), LocalDate.now(), null);
 

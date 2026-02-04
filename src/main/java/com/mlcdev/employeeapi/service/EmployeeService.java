@@ -97,10 +97,7 @@ public class EmployeeService {
             throw new BusinessRuleException("The name can't be blank");
         }
         if (dto.getSalary().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BusinessRuleException("The salary must be positive");
-        }
-        if (dto.getHiringDate().isAfter(LocalDate.now())) {
-            throw new BusinessRuleException("The hiring date can't be after today");
+            throw new BusinessRuleException("The salary must be greater than 0");
         }
         validateRole(dto.getRole());
         LOGGER.debug("All the information from the DTO are valid.");
