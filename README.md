@@ -1,6 +1,7 @@
 # Employee API
 
-**Description:** `A robust RESTful API built with pure Java (Servlets & JDBC) to acquire a profound understanding of backend architecture without the 'magic' of frameworks like Spring.`
+**Description:** `A robust RESTful API built with pure Java (Servlets & JDBC) to acquire a profound understanding of backend architecture and be prepared to deal with the "magic" that the Spring framework provide.
+I gained deep experience with this project using Connection Pools with HikariCP, JSON manipulation with Jackson, Global Exception handling with Filter and MVC layer architeture `
 
 This Java project was developed to master the fundamentals of Web Development and Backend Architecture.
 #### The primary focus was on:
@@ -30,6 +31,21 @@ The application exposes endpoints to manage Employees, handling JSON serializati
 * **Clean Architecture:**
     * **DAO Pattern:** The Service layer never touches SQL code; it relies on the Data Access Object.
     * **DTO Pattern:** The API never exposes the raw Entity to the outside world, using Data Transfer Objects for safety and decoupling.
+
+---
+## 🧪 Testing and Code Quality
+* **Unit Tests with JUnit5 & Mockito**
+   * Used H2 memory Database to run the DAO tests.
+   * Mocked the DAO class on the Service Tests.
+   * Mocked the Service, Requests and Responses on the Controller Tests. 
+
+* **Logging with SLF4J & Logback**
+  * Used logging at the keypoints of the application.
+  * Used different log levels to the respective situation.
+  * Configured the log template
+
+**Why this matters:** Tests and structured logging are non-negotiable in production systems. 
+They enable rapid error detection and verification of correct behavior.
 
 ---
 
@@ -62,7 +78,10 @@ This project bridged the gap between basic Java syntax and Web Backend developme
 
 * **RESTful Principles:**
     * Practiced the correct usage of HTTP Verbs (`GET`, `POST`, `PUT`, `DELETE`) and Status Codes (`200 OK`, `201 Created`, `204 No Content`, `404 Not Found`).
-
+      
+* **Foundation for Spring Framework**
+    * By implementing these patterns manually, I understand *why* Spring abstracts connection pooling, dependency injection, and exception handling.
+    * Clear understanding of Spring components: `@Repository`, `@Service`, `@Controller`, `@ControllerAdvice`—and the problems they solve under the framework.
 ---
 
 ## 🛠️ Configuration & Setup
