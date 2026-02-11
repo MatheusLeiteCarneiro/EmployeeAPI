@@ -4,6 +4,17 @@ A RESTful API built with pure Java (Servlets & JDBC) to deeply understand backen
 
 This project simulates a production-ready backend application, focusing on clean architecture, performance, testing, and proper separation of responsibilities.
 
+> 🚀 **Note:** This is the **Core Java** version of the project.  
+> Check out the **Spring Boot** evolution of this API here: [EmployeeAPI-Spring](https://github.com/MatheusLeiteCarneiro/EmployeeAPI-Spring)
+
+---
+## 🎯 Purpose 
+The goal of this project was to master backend fundamentals before depending on high-level frameworks. Instead of relying on Spring Boot to abstract complexity, this application manually implements:
+* HTTP request lifecycle handling
+* Dependency boundaries between layers
+* Global exception management
+* Database connection pooling
+* Clean separation of concerns This approach builds strong architectural foundations and a deeper understanding of enterprise backend systems.
 ---
 
 ## 📌 Project Overview
