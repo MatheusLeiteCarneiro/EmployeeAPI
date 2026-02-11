@@ -1,205 +1,254 @@
 # Employee API
 
-**Description:** `A robust RESTful API built with pure Java (Servlets & JDBC) to acquire a profound understanding of backend architecture and be prepared to deal with the "magic" that the Spring framework provide.
-I gained deep experience with this project using Connection Pools with HikariCP, JSON manipulation with Jackson, Global Exception handling with Filter and MVC layer architeture `
+A RESTful API built with pure Java (Servlets & JDBC) to deeply understand backend architecture without relying on frameworks like Spring.
 
-This Java project was developed to master the fundamentals of Web Development and Backend Architecture.
-#### The primary focus was on:
-* High-Performance Database Connection Pooling (HikariCP).
-* Centralized Error Handling via Filters.
-* Implementing DAO and DTO patterns manually.
-
-The application exposes endpoints to manage Employees, handling JSON serialization/deserialization manually and enforcing strict architectural layers.
+This project simulates a production-ready backend application, focusing on clean architecture, performance, testing, and proper separation of responsibilities.
 
 ---
+
+## 📌 Project Overview
+
+- **Architecture:** MVC + Service Layer + DAO + DTO  
+- **Exception Handling:** Global Filter  
+- **Connection Pooling:** HikariCP  
+- **Database:** MySQL  
+- **Testing:** JUnit 5 + Mockito + H2  
+- **Server:** Apache Tomcat  
+
+This project was intentionally built without Spring to fully understand what frameworks abstract under the hood.
+
+---
+
 ## ✨ Features
 
-* **CRUD Operations:** Complete lifecycle management for Employees (Create, Read, Update, Delete).
+### ✅ CRUD Operations
+Complete lifecycle management for Employees:
+- Create
+- Read
+- Update
+- Delete
 
-* **Pagination System:**
-    * The `GET` endpoint supports `page` and `size` query parameters.
-    * Optimized SQL queries using `LIMIT` and `OFFSET` to handle large datasets efficiently.
+### ✅ Pagination
+The `GET /employee` endpoint supports:
 
-* **High-Performance Database Access:**
-    * **Connection Pooling (HikariCP):** Instead of opening a new expensive connection for every request, the API uses a pre-warmed pool of connections, drastically reducing latency.
-    * **Prepared Statements:** All database operations are protected against SQL Injection.
+```
+?page=1&size=10
+```
 
-* **Global Exception Handling:**
-    * Implemented a custom `Filter` (`ExceptionHandlerFilter`) that wraps the entire request lifecycle.
-    * Catches custom exceptions like `BusinessRuleException` or `DatabaseException` and converts them into standardized, clean JSON responses (`ErrorDTO`) without exposing stack traces to the client.
-
-* **Clean Architecture:**
-    * **DAO Pattern:** The Service layer never touches SQL code; it relies on the Data Access Object.
-    * **DTO Pattern:** The API never exposes the raw Entity to the outside world, using Data Transfer Objects for safety and decoupling.
+Implemented using optimized SQL with `LIMIT` and `OFFSET`.
 
 ---
-## 🧪 Testing and Code Quality
-* **Unit Tests with JUnit5 & Mockito**
-   * Used H2 memory Database to run the DAO tests.
-   * Mocked the DAO class on the Service Tests.
-   * Mocked the Service, Requests and Responses on the Controller Tests. 
 
-* **Logging with SLF4J & Logback**
-  * Used logging at the keypoints of the application.
-  * Used different log levels to the respective situation.
-  * Configured the log template
+### ✅ High-Performance Database Access
 
-**Why this matters:** Tests and structured logging are non-negotiable in production systems. 
-They enable rapid error detection and verification of correct behavior.
+- **HikariCP Connection Pool**
+  - Avoids expensive connection creation per request
+  - Reuses pre-initialized connections
+  - Reduces latency and improves scalability
+
+- **Prepared Statements**
+  - Prevents SQL Injection
+  - Ensures safe parameter handling
+
+---
+
+### ✅ Global Exception Handling
+
+Implemented a custom `ExceptionHandlerFilter` that:
+
+- Wraps the entire request lifecycle
+- Catches custom exceptions (`BusinessRuleException`, `DatabaseException`)
+- Returns standardized JSON error responses
+- Prevents stack traces from leaking to clients
+
+Example error response:
+
+```json
+{
+  "status": 400,
+  "message": "Salary must be greater than zero"
+}
+```
+
+---
+
+### ✅ Clean Architecture
+
+- **DAO Pattern**
+  - Service layer does not contain SQL logic.
+  - All database operations are isolated in the DAO.
+
+- **DTO Pattern**
+  - Entities are never exposed directly.
+  - API contracts are controlled and decoupled.
+
+This ensures maintainability and scalability.
+
+---
+
+## 🧪 Testing & Code Quality
+
+### Unit Testing
+
+- **JUnit 5**
+- **Mockito**
+- **H2 In-Memory Database** for DAO testing
+
+Testing strategy:
+
+- DAO tested with real H2 database  
+- Service layer tested with mocked DAO  
+- Controller tested with mocked Service and HTTP objects  
+
+---
+
+### Logging
+
+- **SLF4J + Logback**
+- Different log levels (INFO, WARN, ERROR)
+- Structured log configuration
+
+Testing and logging were treated as production-level concerns.
 
 ---
 
 ## 🛠️ Technologies Used
 
-* **Java 25**
-* **Jakarta EE (Servlets)**
-* **MySQL** (Database)
-* **MySQL Connector/J** (JDBC Driver)
-* **HikariCP** (Connection Pooling)
-* **Jackson** (JSON Processing)
-* **Maven** (Dependency Management)
-* **Apache Tomcat** (Web Server)
-* **Git & GitHub** for version control.
+- Java 25  
+- Jakarta EE (Servlets)  
+- MySQL  
+- MySQL Connector/J  
+- HikariCP  
+- Jackson  
+- Maven  
+- Apache Tomcat 10+  
+- Git & GitHub  
 
 ---
 
-## 🚀 What I Learned (Concepts Practiced)
+## 🧠 What This Project Demonstrates
 
-This project bridged the gap between basic Java syntax and Web Backend development:
+This project shows understanding of:
 
-* **Manual Architectural Implementation:**
-    * I built the layers that Spring Boot usually creates automatically. This gave me a deep understanding of *how* and *why* we use **Controllers**, **Services**, and **Repositories**.
+- HTTP request lifecycle  
+- Servlet Filters  
+- Layered architecture  
+- Dependency boundaries  
+- Database connection lifecycle  
+- RESTful principles  
+- Manual implementation of patterns commonly abstracted by Spring Boot  
 
-* **Connection Lifecycle Management:**
-    * Learned the cost of opening database connections and how to solve it using the **Connection Pool** with **HikariCP**.
+By building these layers manually, I developed a strong foundation for working with frameworks like Spring.
 
-* **Servlet Filters & Request Chain:**
-    * Understood how to intercept HTTP requests using Filters to handle cross-cutting concerns like Exception Handling and Content-Type encoding globally.
-
-* **RESTful Principles:**
-    * Practiced the correct usage of HTTP Verbs (`GET`, `POST`, `PUT`, `DELETE`) and Status Codes (`200 OK`, `201 Created`, `204 No Content`, `404 Not Found`).
-      
-* **Foundation for Spring Framework**
-    * By implementing these patterns manually, I understand *why* Spring abstracts connection pooling, dependency injection, and exception handling.
-    * Clear understanding of Spring components: `@Repository`, `@Service`, `@Controller`, `@ControllerAdvice`—and the problems they solve under the framework.
 ---
 
 ## 🛠️ Configuration & Setup
 
-### 1. Database Configuration
-The project is configured with default development credentials in `src/main/resources/application.properties`.
+### 1️⃣ Database Configuration
 
-> **Note:** The default user is set to `root` and the password is set to `1234`. Please update the properties to match your local MySQL installation before running.
+Edit:
+
+```
+src/main/resources/application.properties
+```
+
+Default configuration:
 
 ```properties
 db.url=jdbc:mysql://localhost:3306/EmployeeAPI?useTimeZone=true&serverTimeZone=UTC
-db.user=root  ← Change this if your user is different
-db.password=1234  ← Change this if your password is different
+db.user=root
+db.password=1234
 ```
+
+Update credentials according to your local setup.
 
 ---
 
-### 2. Database Initialization
-To create the project database use the following SQL script
+### 2️⃣ Database Initialization
 
 ```sql
--- 1. Create Database
 CREATE DATABASE IF NOT EXISTS EmployeeAPI;
 USE EmployeeAPI;
 
--- 2. Create Table
 CREATE TABLE IF NOT EXISTS employee (
-id BIGINT AUTO_INCREMENT PRIMARY KEY,
- name VARCHAR(255) NOT NULL,
-salary DECIMAL(19, 2) NOT NULL,
-role VARCHAR(50) NOT NULL,
- hiring_date DATE NOT NULL
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  salary DECIMAL(19,2) NOT NULL,
+  role VARCHAR(50) NOT NULL,
+  hiring_date DATE NOT NULL
 );
+```
 
---3. (Optional) Insert initial employees
+Optional sample data:
+
+```sql
 INSERT INTO employee (name, salary, role, hiring_date) VALUES
 ('Carlos Eduardo Silva', 12500.00, 'SENIOR', '2021-03-15'),
 ('Fernanda Oliveira', 7800.00, 'MID_LEVEL', '2022-08-20'),
-('Lucas Pereira', 4200.50, 'JUNIOR', '2024-01-10'),
-('Amanda Costa', 1800.00, 'INTERN', '2024-11-01'),
-('Roberto Mendes', 8500.00, 'MID_LEVEL', '2023-05-12');
+('Lucas Pereira', 4200.50, 'JUNIOR', '2024-01-10');
 ```
-> **Note:** The roles available in the project are: `INTERN`, `JUNIOR`, `MID_LEVEL`, `SENIOR`.
+
+Available roles:
+
+```
+INTERN | JUNIOR | MID_LEVEL | SENIOR
+```
+
 ---
-## 🏁 How to Run
-### - Prerequisites
-- **Java 17+**.
-- **Maven**.
-- **MySQL** Database installed and running.
-- **Apache Tomcat 10+** (Server).
-- **Endpoints Testing Tool:** Postman or Insomnia.
 
-## - Steps
+## 🚀 Running the Application
 
-### 1. Clone the repository:
-Open your terminal and run:
+### Prerequisites
+
+- Java 17+  
+- Maven  
+- MySQL running  
+- Apache Tomcat 10+  
+- Postman or Insomnia  
+
+---
+
+### 1️⃣ Clone
+
 ```bash
 git clone https://github.com/MatheusLeiteCarneiro/EmployeeAPI.git
 ```
 
-### 2. Database Setup:
-- Open your MySQL client (Workbench, DBeaver, or Terminal).
-- Create the database and table using the script provided in the **Configuration** section above.
+---
 
-### 3. Configure Credentials:
-- Open the file `src/main/resources/application.properties`.
-- Update the `db.user` and `db.password` fields with your local MySQL information.
+### 2️⃣ Build
 
-### 4. Build & Run:
-Choose your preferred IDE below to run the server.
+```bash
+mvn clean package
+```
 
-<details>
-<summary><strong>👉 Option 1: IntelliJ IDEA</strong></summary>
-<br>
+---
 
-1.  **Open** the project in IntelliJ and wait for Maven to download dependencies.
-2.  Click on **"Add Configuration"** (top right) → **+** → **Tomcat Server** → **Local**.
-3.  In the **"Deployment"** tab, click **+** and select **"Artifact"** (`EmployeeAPI:war exploded`).
-4.  Click **Apply** and **Run**.
-</details>
+### 3️⃣ Deploy
 
-<details>
-<summary><strong>👉 Option 2: Eclipse IDE</strong></summary>
-<br>
+Deploy the generated `.war` file to Tomcat.
 
-1.  **Import:** Go to `File` > `Import` > `Maven` > `Existing Maven Projects` and select the cloned folder.
-2.  **Update Maven:** Right-click the project > `Maven` > `Update Project` (wait for downloads).
-3.  **Server Setup:**
-    * Go to the **Servers** view (if not visible: `Window` > `Show View` > `Servers`).
-    * Click to create a new server > Select **Apache Tomcat v10.1** > Next.
-    * Browse to your local Tomcat installation directory > Finish.
-4.  **Run:**
-    * Right-click the project root folder.
-    * Select `Run As` > `Run on Server`.
-    * Choose the Tomcat server you just created and click **Finish**.
-</details>
+Base URL:
 
-### 5. Access the API:
-The API Base URL is: `http://localhost:8080/app`
+```
+http://localhost:8080/app
+```
 
-> **Note:** Accessing the base URL (`/app`) may return a 404 as there is no index page.
+---
 
+## 📡 API Endpoints
 
+| Method | Endpoint | Description |
+|--------|----------|------------|
+| GET | `/app/employee` | List employees (pagination supported) |
+| GET | `/app/employee/{id}` | Get employee by ID |
+| POST | `/app/employee` | Create employee |
+| PUT | `/app/employee/{id}` | Update employee |
+| DELETE | `/app/employee/{id}` | Delete employee |
 
-### 6. Available Endpoints
+---
 
-Here is the full list of API routes you can test.
-
-| Method     | Endpoint             | Description                                     |
-|:-----------|:---------------------|:------------------------------------------------|
-| **GET**    | `/app/employee`      | List all employees (supports `?page=1&size=10`) |
-| **GET**    | `/app/employee/{id}` | Get details of a specific employee              |
-| **POST**   | `/app/employee`      | Create a new employee                           |
-| **PUT**    | `/app/employee/{id}` | Update an existing employee                     |
-| **DELETE** | `/app/employee/{id}` | Remove an employee                              |
-> **Note:** On the GET method if you don't specify a page and a size it will automatically assume that page=1 and size=10.
-#### 📝 Sample JSON Payload (for POST & PUT)
-Use this JSON body when creating or updating an employee. Note that `hiringDate` follows the `YYYY-MM-DD` format.
+### 📝 Sample JSON (POST / PUT)
 
 ```json
 {
@@ -210,19 +259,21 @@ Use this JSON body when creating or updating an employee. Note that `hiringDate`
 }
 ```
 
-### - Testing with Postman
-To make testing easier, I have included a Postman Collection file in this repository with all endpoints pre-configured.
-1.  **Download the Collection:**
-    * Locate the file [`EmployeeAPI.postman_collection.json`](./EmployeeAPI.postman_collection.json) on the project files.
+---
 
-2.  **Import into Postman:**
-    * Open Postman.
-    * Click the **Import** button.
-    * Select the `.json` file.
-3.  **Run:**
-    * Select the **"Employee API"** collection from the menu.
-    * Start testing the requests.
+## 📬 Postman Collection
 
+The repository includes:
+
+```
+EmployeeAPI.postman_collection.json
+```
+
+Import it into Postman to test all endpoints quickly.
 
 ---
-### Author: **Matheus Leite Carneiro**
+
+## 👨‍💻 Author
+
+**Matheus Leite Carneiro**  
+Backend Developer | Java
