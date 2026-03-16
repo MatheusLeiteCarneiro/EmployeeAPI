@@ -1,9 +1,9 @@
 package com.mlcdev.employeeapi.repository;
 
-import com.mlcdev.employeeapi.config.DatabaseConfig;
 import com.mlcdev.employeeapi.exception.DatabaseException;
 import com.mlcdev.employeeapi.model.Employee;
 import com.mlcdev.employeeapi.model.Role;
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,14 +14,17 @@ import java.util.Optional;
 
 public class EmployeeDAO {
 
+    private final HikariDataSource dataSource;
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeDAO.class);
-    public EmployeeDAO() {
+
+    public EmployeeDAO(HikariDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     public Optional<Employee> findById(Long id) {
         Employee employee = null;
         String query = "SELECT * FROM employee WHERE id = ?;";
-        try (Connection con = DatabaseConfig.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (Connection con = dataSource.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
             try (ResultSet rs = preparedStatement.executeQuery()) {
                 if (rs.next()) {
@@ -38,7 +41,7 @@ public class EmployeeDAO {
     public List<Employee> findAll(int limit, int offset) {
         List<Employee> employeeList = new ArrayList<>();
         String query = "SELECT * FROM employee LIMIT ? OFFSET ?;";
-        try (Connection con = DatabaseConfig.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (Connection con = dataSource.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setInt(1, limit);
             preparedStatement.setInt(2, offset);
 
@@ -56,7 +59,7 @@ public class EmployeeDAO {
 
     public Employee save(Employee employee) {
         String query = "INSERT INTO employee (name,salary,role,hiring_date) VALUES (?,?,?,?);";
-        try (Connection con = DatabaseConfig.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (Connection con = dataSource.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
             setEmployeeStatements(preparedStatement, employee);
             preparedStatement.executeUpdate();
             try (ResultSet rs = preparedStatement.getGeneratedKeys()) {
@@ -73,7 +76,7 @@ public class EmployeeDAO {
 
     public Optional<Employee> update(Employee employee) {
         String query = "UPDATE employee SET name = ?, salary = ?, role = ?, hiring_date = ? WHERE id = ?;";
-        try (Connection con = DatabaseConfig.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (Connection con = dataSource.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
             setEmployeeStatements(preparedStatement, employee);
             preparedStatement.setLong(5, employee.getId());
             int rowsAffected = preparedStatement.executeUpdate();
@@ -90,7 +93,7 @@ public class EmployeeDAO {
 
     public boolean delete(Long id) {
         String query = "DELETE FROM employee WHERE id = ?";
-        try (Connection con = DatabaseConfig.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
+        try (Connection con = dataSource.getConnection(); PreparedStatement preparedStatement = con.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected == 0) {
