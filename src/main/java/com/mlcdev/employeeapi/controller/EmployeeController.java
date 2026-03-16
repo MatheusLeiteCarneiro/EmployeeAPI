@@ -1,14 +1,15 @@
 package com.mlcdev.employeeapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mlcdev.employeeapi.config.ObjectMapperConfig;
 import com.mlcdev.employeeapi.dto.EmployeeDTO;
 import com.mlcdev.employeeapi.exception.InvalidParamException;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.mlcdev.employeeapi.repository.EmployeeDAO;
 import com.mlcdev.employeeapi.service.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +21,15 @@ import java.util.List;
 public class EmployeeController extends HttpServlet {
     private static final int DEFAULT_PAGE = 1;
     private static final int DEFAULT_SIZE = 10;
-    private final EmployeeService service;
-    private final ObjectMapper objectMapper;
+    private EmployeeService service;
+    private ObjectMapper objectMapper;
     private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 
-    public EmployeeController() {
-        this.service = new EmployeeService(new EmployeeDAO());
-        this.objectMapper = ObjectMapperConfig.getMapper();
-    }
-
-    public EmployeeController(EmployeeService service) {
-        this.service = service;
-        this.objectMapper = ObjectMapperConfig.getMapper();
-
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        ServletContext context = config.getServletContext();
+        service = (EmployeeService) context.getAttribute("EmployeeService");
+        objectMapper = (ObjectMapper) context.getAttribute("ObjectMapper");
     }
 
     @Override
