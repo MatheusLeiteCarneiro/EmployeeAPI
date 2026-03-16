@@ -4,6 +4,7 @@ import com.mlcdev.employeeapi.config.DatabaseConfig;
 import com.mlcdev.employeeapi.exception.DatabaseException;
 import com.mlcdev.employeeapi.model.Employee;
 import com.mlcdev.employeeapi.model.Role;
+import com.zaxxer.hikari.HikariDataSource;
 import org.junit.jupiter.api.*;
 
 import java.math.BigDecimal;
@@ -15,11 +16,13 @@ import java.util.Optional;
 
 public class EmployeeDAOTest {
 
+    private static HikariDataSource dataSource;
     private EmployeeDAO dao;
 
     @BeforeAll
     static void setupDatabase(){
-        try(Connection conn = DatabaseConfig.getConnection()){
+        dataSource = DatabaseConfig.createDataSource();
+        try(Connection conn = dataSource.getConnection()){
             String query = """
             CREATE TABLE IF NOT EXISTS employee (
                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -38,17 +41,17 @@ public class EmployeeDAOTest {
     @BeforeEach
     void clearDatabase(){
         String query = "TRUNCATE TABLE employee;";
-        try(Connection conn = DatabaseConfig.getConnection()){
+        try(Connection conn = dataSource.getConnection()){
             conn.createStatement().execute(query);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        dao = new EmployeeDAO();
+        dao = new EmployeeDAO(dataSource);
     }
 
     private void addBaseEmployeeToDatabase(){
         String query = "INSERT INTO employee (name, salary, hiring_date, role) VALUES ('name', '1.00', '2000-01-01', 'INTERN');";
-        try(Connection conn = DatabaseConfig.getConnection()){
+        try(Connection conn = dataSource.getConnection()){
             conn.createStatement().execute(query);
         }
         catch (SQLException e){
@@ -121,7 +124,7 @@ public class EmployeeDAOTest {
 
     private void dropTable(){
         String query = "DROP TABLE employee";
-        try(Connection conn = DatabaseConfig.getConnection()){
+        try(Connection conn = dataSource.getConnection()){
             conn.createStatement().execute(query);
         }
         catch (Exception e){
@@ -199,11 +202,16 @@ public class EmployeeDAOTest {
     @AfterAll
     static void endTableTest(){
         String query = "DROP TABLE employee IF EXISTS;";
-        try(Connection conn = DatabaseConfig.getConnection()){
+        try(Connection conn = dataSource.getConnection()){
             conn.createStatement().execute(query);
         }
         catch (Exception e){
             throw new RuntimeException(e);
+        }
+        finally {
+            if (dataSource != null && !dataSource.isClosed()) {
+                dataSource.close();
+            }
         }
     }
 }

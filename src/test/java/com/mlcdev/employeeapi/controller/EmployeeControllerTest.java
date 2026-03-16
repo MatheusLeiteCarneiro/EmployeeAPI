@@ -7,6 +7,8 @@ import com.mlcdev.employeeapi.dto.EmployeeDTO;
 import com.mlcdev.employeeapi.exception.InvalidParamException;
 import com.mlcdev.employeeapi.model.Role;
 import com.mlcdev.employeeapi.service.EmployeeService;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +32,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class EmployeeControllerTest {
 
-    @InjectMocks
+
     private EmployeeController controller;
 
     @Mock
@@ -42,13 +44,24 @@ public class EmployeeControllerTest {
     @Mock
     private HttpServletResponse response;
 
+    @Mock
+    private ServletConfig servletConfig;
+
+    @Mock
+    private ServletContext servletContext;
+
     private StringWriter responseWriter;
 
     @BeforeEach
     void setUp() throws Exception{
+        controller = new EmployeeController();
         responseWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(responseWriter);
         lenient().when(response.getWriter()).thenReturn(printWriter);
+        when(servletConfig.getServletContext()).thenReturn(servletContext);
+        when(servletContext.getAttribute("EmployeeService")).thenReturn(service);
+        when(servletContext.getAttribute("ObjectMapper")).thenReturn(ObjectMapperConfig.getMapper());
+        controller.init(servletConfig);
     }
     private EmployeeDTO getBaseDTO(){
         return new EmployeeDTO(1L, "name", new BigDecimal("1.00"), LocalDate.of(2000, 1, 1), Role.INTERN.name());
