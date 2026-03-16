@@ -19,18 +19,28 @@ The goal of this project was to master backend fundamentals before depending on 
 
 ## 📌 Project Overview
 
-- **Architecture:** MVC + Service Layer + DAO + DTO  
-- **Exception Handling:** Global Filter  
-- **Connection Pooling:** HikariCP  
-- **Database:** MySQL  
-- **Testing:** JUnit 5 + Mockito + H2  
-- **Server:** Apache Tomcat  
+- **Architecture:** MVC + Service Layer + DAO + DTO
+- **Dependency Injection:** Manual Wiring via ServletContextListener
+- **Exception Handling:** Global Filter
+- **Connection Pooling:** HikariCP
+- **Database:** MySQL (via Docker)
+- **Testing:** JUnit 5 + Mockito + H2
+- **Server:** Apache Tomcat 11
 
 This project was intentionally built without Spring to fully understand what frameworks abstract under the hood.
 
 ---
 
 ## ✨ Features
+
+### ✅ Clean Architecture & Dependency Injection
+
+- **Manual IoC Container (`ApplicationContextListener`)**
+  - Dependencies (DataSource, DAO, Service, and ObjectMapper) are wired exactly once during server startup.
+  - Controllers retrieve pre-configured singletons from the `ServletContext`.
+- **DAO & DTO Patterns**
+  - Service layer does not contain SQL logic.
+  - API contracts are controlled and decoupled, entities are never exposed directly.
 
 ### ✅ CRUD Operations
 Complete lifecycle management for Employees:
@@ -83,20 +93,6 @@ Example error response:
 
 ---
 
-### ✅ Clean Architecture
-
-- **DAO Pattern**
-  - Service layer does not contain SQL logic.
-  - All database operations are isolated in the DAO.
-
-- **DTO Pattern**
-  - Entities are never exposed directly.
-  - API contracts are controlled and decoupled.
-
-This ensures maintainability and scalability.
-
----
-
 ## 🧪 Testing & Code Quality
 
 ### Unit Testing
@@ -105,11 +101,11 @@ This ensures maintainability and scalability.
 - **Mockito**
 - **H2 In-Memory Database** for DAO testing
 
-Testing strategy:
 
-- DAO tested with real H2 database  
-- Service layer tested with mocked DAO  
-- Controller tested with mocked Service and HTTP objects  
+Testing strategy:
+- **DAO:** Tested with a real H2 in-memory database to validate SQL queries.
+- **Service:** Tested with a mocked DAO to validate business rules.
+- **Controller:** Tested by mocking the `ServletContext` lifecycle to validate actual JSON serialization/deserialization and HTTP status codes.
 
 ---
 
@@ -125,15 +121,15 @@ Testing and logging were treated as production-level concerns.
 
 ## 🛠️ Technologies Used
 
-- Java 25  
-- Jakarta EE (Servlets)  
-- MySQL  
-- MySQL Connector/J  
-- HikariCP  
-- Jackson  
-- Maven  
-- Apache Tomcat 10+  
-- Git & GitHub  
+- Java 25
+- Jakarta EE (Servlets & WebListeners)
+- MySQL 8 & Docker Compose
+- MySQL Connector/J
+- HikariCP
+- Jackson (JSON processing)
+- Maven
+- Apache Tomcat 11
+- Git & GitHub
 
 ---
 
@@ -155,6 +151,15 @@ By building these layers manually, I developed a strong foundation for working w
 
 ## 🛠️ Configuration & Setup
 
+### - Infrastructure Setup (Docker)
+
+You don't need to install MySQL locally. The project includes a `docker-compose.yml` file to spin up the database instantly.
+
+Run the following command in the project root:
+```bash
+docker-compose up -d
+```
+
 ### 1️⃣ Database Configuration
 
 Edit:
@@ -166,9 +171,10 @@ src/main/resources/application.properties
 Default configuration:
 
 ```properties
-db.url=jdbc:mysql://localhost:3306/EmployeeAPI?useTimeZone=true&serverTimeZone=UTC
+db.url=jdbc:mysql://127.0.0.1:3306/EmployeeAPI?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
 db.user=root
 db.password=1234
+db.driver=com.mysql.cj.jdbc.Driver
 ```
 
 Update credentials according to your local setup.
@@ -235,15 +241,16 @@ mvn clean package
 
 ---
 
-### 3️⃣ Deploy
+### 3️⃣ Deploy to Tomcat
 
-Deploy the generated `.war` file to Tomcat.
+Unlike Spring Boot applications, this project requires a standalone web server to run.
 
-Base URL:
-
-```
-http://localhost:8080/app
-```
+1. Download [Apache Tomcat 10+](https://tomcat.apache.org/download-10.cgi) and extract it to your machine.
+2. In your IDE, create a new **Tomcat Server** run configuration.
+3. Point the application server to your extracted Tomcat folder.
+4. Go to the **Deployment** tab and add the `EmployeeAPI:war exploded` artifact.
+5. Set the Application Context to `/app`.
+6. Hit **Run**.
 
 ---
 
